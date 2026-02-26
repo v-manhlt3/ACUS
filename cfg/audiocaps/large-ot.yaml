@@ -1,5 +1,5 @@
 # Experiment Config for each experiment
-output_dir: abl-output/enclap-SW-kernel-gamma3.0
+output_dir: abl-output/enclap-audiocaps-SW-kernel-L1
 logging_dir: runs/tb_log
 logging_steps: 10
 seed: 1115

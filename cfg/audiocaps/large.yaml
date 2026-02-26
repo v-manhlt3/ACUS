@@ -1,5 +1,5 @@
 # Experiment Config for each experiment
-output_dir: output/enclap-CL-AudioCaps-alpha0.1
+output_dir: output/enclap-CL-AudioCaps-L=1
 logging_dir: runs/tb_log
 logging_steps: 10
 seed: 1994

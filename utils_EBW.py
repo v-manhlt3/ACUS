@@ -29,16 +29,21 @@ def kernel_SW(X, Y, a, b, L, p=2, gamma=1):
     d = X.shape[1]
     thetas = ot.sliced.get_random_projections(d, L)
     thetas = torch.tensor(thetas).float().to(X.device)
-    # print("Thetas shape: ", thetas.shape)
-    # print("X shape: ", X.shape)
-    # print("*"*90)
     X_prod = X@thetas
     Y_prod = Y@thetas
     sw_dist = wasserstein_1d(X_prod, Y_prod, a,b,p)
     kernel_dist = torch.exp(-gamma*sw_dist)
     return torch.mean(kernel_dist)
-    # return torch.mean(one_dimensional_Wasserstein(X_prod, Y_prod, a, b, p))**(1./p)
 
+def bias_kernel_SW(X, Y, a, b, L, p=2, gamma=1):
+    d = X.shape[1]
+    thetas = ot.sliced.get_random_projections(d, L)
+    thetas = torch.tensor(thetas).float().to(X.device)
+    X_prod = X@thetas
+    Y_prod = Y@thetas
+    sw_dist = wasserstein_1d(X_prod, Y_prod, a,b,p)
+    kernel_dist = torch.exp(-gamma*torch.mean(sw_dist))
+    return kernel_dist
 
 def HybridEBSW(X, Y, a, b, L, temp=1, p=2,alpha=0.5):
     #X =[X1,X2], X1 \in R^{n,1024} X2 \in R^{n,d}, Y =[Y1,Y2], Y1 \in R^{m,1024} Y2 \in R^{m,d}

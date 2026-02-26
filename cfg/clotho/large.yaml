@@ -1,5 +1,5 @@
 # Experiment Config for each experiment
-output_dir: new-output/enclap-CL-Clotho
+output_dir: abl-output/enclap-clotho-SW-L1
 logging_dir: runs/tb_log
 logging_steps: 10
 seed: 1115

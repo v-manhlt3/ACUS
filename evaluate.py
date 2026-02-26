@@ -1,6 +1,6 @@
 from aac_metrics import evaluate
-from inference_cosine import EnClap
-# from inference import EnClap
+# from inference_cosine import EnClap
+from inference import EnClap
 from tqdm import tqdm
 import os
 import pandas as pd 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
             "prediction": prediction,
             "references": reference
         }
-    with open("pred-fold-new/[Eval]enclap-AudioCaps-CL.json", "w") as f_json:
+    with open("pred-fold-new/[Eval]enclap-Clotho-baseline.json", "w") as f_json:
         json_string = json.dumps(json_output, indent=2)
         f_json.write(json_string)
 

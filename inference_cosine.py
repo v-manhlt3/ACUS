@@ -50,10 +50,10 @@ class EnClap:
             # "num_beams": 4,
             "pad_token_id": 1,
             "max_length": 50,
-            # "top_p": 0.9,
-            "temperature": 1.5,
-            # "top_k": 6,
-            "num_return_sequences":20,
+            # "top_p": 0.7,
+            # "temperature": 1.0,
+            "top_k": 5,
+            "num_return_sequences":10,
             "do_sample": True,
             "output_scores": True,
             "return_dict_in_generate" : True
@@ -137,7 +137,7 @@ class EnClap:
         return caption
     ### infer cosine
     @torch.no_grad()
-    def _infer_cosine(
+    def _infer(
         self,
         encodec_frames: torch.LongTensor,
         clap_embedding: torch.Tensor,
@@ -204,8 +204,9 @@ class EnClap:
 
         return caption
     
+    ### infer SW
     @torch.no_grad()
-    def _infer(
+    def _infer_sw(
         self,
         encodec_frames: torch.LongTensor,
         clap_embedding: torch.Tensor,

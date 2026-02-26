@@ -13,7 +13,7 @@ import torch
 from torch import nn
 import math
 from soft_dtw_cuda import SoftDTW
-from utils_EBW import HybridEBSW, EBSW, kernel_SW
+from utils_EBW import HybridEBSW, EBSW, kernel_SW, bias_kernel_SW
 
 # from tools.random_prj import sliced_Wasserstein
 from sentence_transformers import util
@@ -40,12 +40,12 @@ def apply_rotary_pos_emb(x, cos, sin):
     # Handle a possible sequence length mismatch in between q and k
     cos = cos[:, :, : x.shape[-2], :]
     sin = sin[:, :, : x.shape[-2], :]
+    return (x * cos) + (rotate_half(x) * sin)
+
     # dummy_x = torch.ones(x.shape[0], x.shape[1]).to(x.device)
-    dummy_x = torch.clone(x)
-    # dummy_x.requies_grad =True
-    r_position = (dummy_x * cos) + (rotate_half(dummy_x) * sin)
-    # return (x * cos) + (rotate_half(x) * sin)
-    return torch.cat([x, r_position.squeeze(0).squeeze(0)], dim=-1)
+    # dummy_x = torch.clone(x)
+    # r_position = (dummy_x * cos) + (rotate_half(dummy_x) * sin)
+    # return torch.cat([x, r_position.squeeze(0).squeeze(0)], dim=-1)
 
 
 class RotaryEmbedding(torch.nn.Module):
@@ -281,9 +281,8 @@ class OTLossKernel(nn.Module):
                 b = b.to(text.device)
                 # loss = EBSW(aud, text, a, b, L=50, temp=1.0)
                 # loss = HybridEBSW(aud, text, a, b, L=50, temp=1.0)
-                # print("Audio shape: ", aud.shape)
-                loss = kernel_SW(X=aud, Y=text, a=a, b=b, L=50, p=2, gamma=3.0)
-                # loss = ot.sliced.sliced_wasserstein_distance(aud, text, n_projections=50)
+                loss = kernel_SW(X=aud, Y=text, a=a, b=b, L=1, p=2, gamma=2.5)
+                # loss = bias_kernel_SW(X=aud, Y=text, a=a, b=b, L=50, p=2, gamma=1.5)
                 total_loss+=loss
 
             return total_loss/batch_size
